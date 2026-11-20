@@ -15,7 +15,7 @@
     --stroke:rgba(255,255,255,.09); --stroke-hi:rgba(255,255,255,.22);
     --radius:20px;
     --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-    --mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    --mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono","PingFang SC","Microsoft YaHei",monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -469,6 +469,106 @@
     stage.addEventListener("mouseleave", function(){
       stage.style.setProperty("--px", 0);
       stage.style.setProperty("--py", 0);
+    });
+  }
+})();
+</script>
+<script>
+/* ===== hidden easter egg : Konami code / 7 clicks on brand ===== */
+(function(){
+  "use strict";
+  var seq=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"], idx=0;
+  var shown=false;
+  function reveal(){
+    if(shown) return; shown=true;
+    var st=document.createElement("style");
+    st.textContent=
+      "#ee-wrap{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;"+
+      "background:radial-gradient(ellipse at 50% 25%,rgba(118,40,82,.92),rgba(15,9,28,.97) 68%);"+
+      "opacity:0;transition:opacity .9s ease;overflow:hidden;"+
+      "-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}"+
+      "#ee-wrap.in{opacity:1}"+
+      ".ee-float{position:absolute;bottom:-40px;pointer-events:none;color:#ff9ec4;"+
+      "text-shadow:0 0 14px rgba(255,105,180,.85);opacity:0;animation:eeFloat linear infinite}"+
+      ".ee-star{position:absolute;border-radius:50%;background:#ffe3ef;opacity:0;"+
+      "box-shadow:0 0 6px #ffb6d9;animation:eeTwinkle ease-in-out infinite}"+
+      "#ee-halo{position:absolute;width:min(90vw,760px);aspect-ratio:1;border-radius:50%;pointer-events:none;"+
+      "background:radial-gradient(circle,rgba(255,120,170,.22),rgba(255,120,170,.07) 45%,transparent 70%);"+
+      "filter:blur(36px);animation:eeBreath 4s ease-in-out infinite}"+
+      "#ee-card{position:relative;text-align:center;padding:46px clamp(26px,6vw,68px) 42px;border-radius:28px;"+
+      "background:linear-gradient(155deg,rgba(72,34,62,.72),rgba(30,22,52,.8));"+
+      "border:1px solid rgba(255,182,193,.32);"+
+      "box-shadow:0 30px 110px rgba(255,80,140,.2),inset 0 1px 0 rgba(255,255,255,.14);"+
+      "transform:scale(.86) translateY(18px);opacity:0;"+
+      "transition:transform .9s cubic-bezier(.2,.9,.25,1.15),opacity .9s;max-width:min(92vw,760px)}"+
+      "#ee-wrap.in #ee-card{transform:none;opacity:1}"+
+      "#ee-icon{font-size:30px;line-height:1;margin-bottom:10px;"+
+      "filter:drop-shadow(0 0 14px rgba(255,90,140,.8));animation:eeBeat 1.6s ease-in-out infinite}"+
+      "#ee-kicker{font-family:ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.34em;"+
+      "color:#d8a7c4;text-transform:uppercase}"+
+      "#ee-title{margin:20px 0 12px;font-size:clamp(28px,6.4vw,58px);font-weight:800;line-height:1.25;letter-spacing:.02em;"+
+      "background:linear-gradient(100deg,#ffd6e4,#ff9ec4,#ff6f9c,#ffb6d9);background-size:300% 100%;"+
+      "-webkit-background-clip:text;background-clip:text;color:transparent;"+
+      "animation:eeShift 7s linear infinite;white-space:nowrap}"+
+      "#ee-heart{display:inline-block;margin:0 .18em;color:#ff4d79;"+
+      "-webkit-text-fill-color:#ff4d79;text-shadow:0 0 18px rgba(255,77,121,.85);"+
+      "animation:eeBeat 1.1s ease-in-out infinite}"+
+      "#ee-line{width:90px;height:1px;margin:20px auto;"+
+      "background:linear-gradient(90deg,transparent,rgba(255,182,193,.75),transparent)}"+
+      "#ee-sub{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#e6b8d2;"+
+      "letter-spacing:.12em;line-height:1.9}"+
+      "#ee-close{margin-top:30px;appearance:none;border:1px solid rgba(255,182,193,.5);"+
+      "background:linear-gradient(120deg,rgba(255,110,160,.28),rgba(255,180,210,.16));"+
+      "color:#ffe3ef;font-family:inherit;font-size:13px;letter-spacing:.08em;padding:11px 30px;"+
+      "border-radius:100px;cursor:pointer;transition:.25s;box-shadow:0 6px 24px rgba(255,80,140,.18)}"+
+      "#ee-close:hover{background:linear-gradient(120deg,rgba(255,110,160,.5),rgba(255,180,210,.32));"+
+      "color:#fff;box-shadow:0 8px 32px rgba(255,80,140,.38);transform:translateY(-2px)}"+
+      "@keyframes eeBreath{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.14);opacity:1}}"+
+      "@keyframes eeBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.2)}}"+
+      "@keyframes eeShift{to{background-position:300% 0}}"+
+      "@keyframes eeFloat{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:.9}90%{opacity:.9}100%{transform:translateY(-110vh) rotate(40deg);opacity:0}}"+
+      "@keyframes eeTwinkle{0%,100%{opacity:.12;transform:scale(.7)}50%{opacity:.95;transform:scale(1.3)}}"+
+      "@media(prefers-reduced-motion:reduce){#ee-halo,#ee-heart,#ee-title,.ee-float,.ee-star,#ee-icon{animation:none}}";
+    document.head.appendChild(st);
+    var wrap=document.createElement("div"); wrap.id="ee-wrap";
+    var decor="";
+    for(var i=0;i<24;i++){
+      var sz=12+Math.random()*20, lf=Math.random()*100, dr=9+Math.random()*12, dy=-Math.random()*dr;
+      decor+='<span class="ee-float" style="left:'+lf+'%;font-size:'+sz+'px;animation-duration:'+dr+'s;animation-delay:'+dy+'s">'+(Math.random()>.5?'♥':'❤')+'</span>';
+    }
+    for(var j=0;j<40;j++){
+      var ss=1+Math.random()*2, lx=Math.random()*100, ty=Math.random()*100, dd=2+Math.random()*4, dl=-Math.random()*dd;
+      decor+='<span class="ee-star" style="left:'+lx+'%;top:'+ty+'%;width:'+ss+'px;height:'+ss+'px;animation-duration:'+dd+'s;animation-delay:'+dl+'s"></span>';
+    }
+    wrap.innerHTML=
+      decor+
+      '<div id="ee-halo"></div>'+
+      '<div id="ee-card">'+
+      '<div id="ee-icon">💗</div>'+
+      '<div id="ee-kicker">A little secret for you</div>'+
+      '<div id="ee-title">陈墩墩<span id="ee-heart">♥</span>牛哞哞</div>'+
+      '<div id="ee-line"></div>'+
+      '<div id="ee-sub">在这满天星河里 · 我只看见你<br>for the one who found this · 2026</div>'+
+      '<button id="ee-close" type="button">收下这份心意</button></div>';
+    document.body.appendChild(wrap);
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add("in"); }); });
+    function close(){ wrap.classList.remove("in"); setTimeout(function(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); if(st.parentNode) st.parentNode.removeChild(st); },950); }
+    document.getElementById("ee-close").addEventListener("click",close);
+    wrap.addEventListener("click",function(e){ if(e.target===wrap) close(); });
+    document.addEventListener("keydown",function(e){ if(e.key==="Escape"&&!wrap.hidden) close(); },{once:true});
+  }
+  document.addEventListener("keydown",function(e){
+    var k=e.key.length===1?e.key.toLowerCase():e.key;
+    idx=(k===seq[idx])?idx+1:(k===seq[0]?1:0);
+    if(idx===seq.length){ idx=0; reveal(); }
+  });
+  var brand=document.querySelector(".brand")||document.querySelector(".kb-brand")||document.querySelector(".kb-plate strong");
+  if(brand){
+    var clicks=0,timer=null;
+    brand.addEventListener("click",function(){
+      clicks++; clearTimeout(timer);
+      timer=setTimeout(function(){ clicks=0; },1200);
+      if(clicks>=7){ clicks=0; reveal(); }
     });
   }
 })();
