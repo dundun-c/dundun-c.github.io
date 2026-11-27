@@ -240,7 +240,7 @@
 
     <div class="display" id="display">
       <div class="disp-top"><span>KEYFORGE // INPUT</span><span class="disp-tag" id="dispTag">LIVE PREVIEW</span></div>
-      <div class="disp-expr" id="dispExpr">0</div>
+      <div class="disp-expr" id="dispExpr" tabindex="0" title="可直接粘贴数字或表达式（支持千分位逗号，如 31,000,000）">0</div>
       <div class="disp-res" id="dispRes">0</div>
     </div>
   </div>
@@ -616,6 +616,31 @@
     var sel='.key[data-key="'+k+'"]';
     var btn=document.querySelector(sel);
     if(btn){ btn.classList.add("pressed"); setTimeout(function(){ btn.classList.remove("pressed"); },100); }
+  });
+
+  /* ============ 粘贴输入（兼容纯数字 / 千分位逗号） ============ */
+  function normalizePaste(text){
+    var s=String(text||"");
+    // 全角数字与符号 → 半角
+    s=s.replace(/[\uFF10-\uFF19]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);})
+       .replace(/\uFF0B/g,"+").replace(/\uFF0D/g,"-").replace(/\uFF0A/g,"×").replace(/\uFF0F/g,"÷")
+       .replace(/\uFF08/g,"(").replace(/\uFF09/g,")").replace(/\uFF0E/g,".").replace(/\uFF0C/g,",");
+    s=s.replace(/\s+/g,"");   // 去除空白（含换行）
+    s=s.replace(/,/g,"");     // 去除千分位分隔符（计算器语法中逗号非法，一律视为分隔符）
+    s=s.replace(/\*/g,"×").replace(/\//g,"÷");
+    return s;
+  }
+  document.addEventListener("paste",function(e){
+    var tag=(e.target&&e.target.tagName||"").toLowerCase();
+    if(tag==="input"||tag==="textarea") return;
+    var cd=e.clipboardData||window.clipboardData;
+    var text=cd&&cd.getData?cd.getData("text"):"";
+    var tokens=(normalizePaste(text).toLowerCase().match(/mod|[0-9+\-×÷^%().]/g))||[];
+    e.preventDefault();
+    if(!tokens.length) return;
+    if(!faultToast.hidden) hideFault();
+    expr=""; justEval=false; dispTag.textContent="LIVE PREVIEW"; dispTag.classList.remove("is-error");
+    for(var i=0;i<tokens.length;i++) inputKey(tokens[i]);
   });
 })();
 </script>
